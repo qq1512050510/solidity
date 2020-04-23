@@ -55,13 +55,15 @@ enum class SolFunctionStateMutability
 {
 	PURE,
 	VIEW,
-	PAYABLE
+	PAYABLE,
+	NONPAYABLE
 };
 
 enum class SolLibraryFunctionStateMutability
 {
 	PURE,
-	VIEW
+	VIEW,
+	NONPAYABLE
 };
 
 struct SolInterfaceFunction

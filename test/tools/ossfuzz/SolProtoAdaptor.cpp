@@ -40,6 +40,8 @@ SolFunctionStateMutability mutabilityConverter(InterfaceFunction_StateMutability
 		return SolFunctionStateMutability::VIEW;
 	case InterfaceFunction_StateMutability_PAYABLE:
 		return SolFunctionStateMutability::PAYABLE;
+	case InterfaceFunction_StateMutability_NONPAYABLE:
+		return SolFunctionStateMutability::NONPAYABLE;
 	}
 }
 
@@ -53,6 +55,8 @@ SolFunctionStateMutability mutabilityConverter(ContractFunction_StateMutability 
 		return SolFunctionStateMutability::VIEW;
 	case ContractFunction_StateMutability_PAYABLE:
 		return SolFunctionStateMutability::PAYABLE;
+	case ContractFunction_StateMutability_NONPAYABLE:
+		return SolFunctionStateMutability::NONPAYABLE;
 	}
 }
 
@@ -64,6 +68,8 @@ SolLibraryFunctionStateMutability mutabilityConverter(LibraryFunction_StateMutab
 		return SolLibraryFunctionStateMutability::PURE;
 	case LibraryFunction_StateMutability_VIEW:
 		return SolLibraryFunctionStateMutability::VIEW;
+	case LibraryFunction_StateMutability_NONPAYABLE:
+		return SolLibraryFunctionStateMutability::NONPAYABLE;
 	}
 }
 
@@ -122,6 +128,8 @@ string functionMutability(SolFunctionStateMutability _mut)
 		return "view";
 	case SolFunctionStateMutability::PAYABLE:
 		return "payable";
+	case SolFunctionStateMutability::NONPAYABLE:
+		return "";
 	}
 }
 
@@ -133,6 +141,8 @@ string libraryFunctionMutability(SolLibraryFunctionStateMutability _mut)
 		return "pure";
 	case SolLibraryFunctionStateMutability::VIEW:
 		return "view";
+	case SolLibraryFunctionStateMutability::NONPAYABLE:
+		return "";
 	}
 }
 }
