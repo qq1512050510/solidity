@@ -28,12 +28,42 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <string_view>
+
 using namespace std;
 
 namespace solidity::util::test
 {
 
 BOOST_AUTO_TEST_SUITE(StringUtils)
+
+BOOST_AUTO_TEST_CASE(test_splitLines)
+{
+	string const multiLine1 = "Hello";
+	auto const lines1 = splitLines<std::deque>(multiLine1);
+	BOOST_CHECK_EQUAL(lines1.size(), 1);
+	BOOST_CHECK_EQUAL(lines1.front(), "Hello");
+
+	string_view const multiLine2 = "Hello\nWorld"sv;
+	auto const lines2 = splitLines<std::list>(multiLine2);
+	BOOST_CHECK_EQUAL(lines2.size(), 2);
+	BOOST_CHECK_EQUAL(lines2.front(), "Hello"sv);
+	BOOST_CHECK_EQUAL(lines2.back(), "World"sv);
+
+	string const multiLine3 = "Hello\nWorld\n";
+	auto const lines3 = splitLines<std::vector>(multiLine3);
+	BOOST_CHECK_EQUAL(lines3.size(), 3);
+	BOOST_CHECK_EQUAL(lines3[0], "Hello");
+	BOOST_CHECK_EQUAL(lines3[1], "World");
+	BOOST_CHECK_EQUAL(lines3[2], "");
+
+	string_view const emptyLinesStr = "\n\n"sv;
+	auto const emptyLines = splitLines<std::vector>(emptyLinesStr);
+	BOOST_CHECK_EQUAL(emptyLines.size(), 3);
+	BOOST_CHECK_EQUAL(emptyLines[0], "");
+	BOOST_CHECK_EQUAL(emptyLines[1], "");
+	BOOST_CHECK_EQUAL(emptyLines[2], "");
+}
 
 BOOST_AUTO_TEST_CASE(test_similarity)
 {

@@ -176,4 +176,27 @@ inline std::string formatNumberReadable(
 	return str;
 }
 
+/// splits the lines for std::string as well as std::string_view into a custom Container.
+template <template <class> class Container = std::vector, typename T>
+Container<T> splitLines(T const& _text)
+{
+	Container<T> lines;
+	size_t last = 0;
+	size_t next = _text.find('\n');
+
+	while (next != _text.npos) // string::npos
+	{
+		lines.push_back(_text.substr(last, next - last));
+		last = next + 1;
+		next = _text.find('\n', last);
+	}
+
+	if (last != 0)
+		lines.push_back(_text.substr(last));
+	else
+		lines.push_back(_text);
+
+	return lines;
+}
+
 }
