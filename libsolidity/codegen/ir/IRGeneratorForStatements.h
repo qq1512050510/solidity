@@ -25,6 +25,7 @@
 #include <libsolidity/codegen/ir/IRVariable.h>
 
 #include <functional>
+#include <vector>
 
 namespace solidity::frontend
 {
@@ -159,6 +160,13 @@ private:
 	);
 
 	static Type const& type(Expression const& _expression);
+
+	void generateSimpleFunctionCall(
+		FunctionCall const& _functionCall,
+		FunctionType::Kind _kind,
+		std::vector<ASTPointer<Expression const>> const& _arguments,
+		TypePointers const& _parameterTypes
+	);
 
 	std::ostringstream m_code;
 	IRGenerationContext& m_context;

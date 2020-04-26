@@ -525,6 +525,25 @@ bool IRGeneratorForStatements::visit(BinaryOperation const& _binOp)
 	return false;
 }
 
+void IRGeneratorForStatements::generateSimpleFunctionCall(
+	FunctionCall const& _functionCall,
+	FunctionType::Kind _kind,
+	std::vector<ASTPointer<Expression const>> const& _arguments,
+	TypePointers const& _parameterTypes
+)
+{
+	static map<FunctionType::Kind, string> functions = {
+		{FunctionType::Kind::GasLeft, "gas"},
+		{FunctionType::Kind::Selfdestruct, "selfdestruct"},
+		{FunctionType::Kind::BlockHash, "blockhash"},
+	};
+	solAssert(functions.find(_kind) != functions.end(), "");
+	string args;
+	for (unsigned arg_index = 0; arg_index < _arguments.size(); ++arg_index)
+		args += expressionAsType(*_arguments.at(arg_index), *(_parameterTypes.at(arg_index))) + (arg_index + 1 < _arguments.size() ? ", " : "");
+	define(_functionCall) << functions[_kind] << "(" << args << ")\n";
+}
+
 void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 {
 	solUnimplementedAssert(
@@ -808,14 +827,10 @@ void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 		break;
 	}
 	case FunctionType::Kind::GasLeft:
-	{
-		define(_functionCall) << "gas()\n";
-		break;
-	}
 	case FunctionType::Kind::Selfdestruct:
+	case FunctionType::Kind::BlockHash:
 	{
-		solAssert(arguments.size() == 1, "");
-		define(_functionCall) << "selfdestruct(" << expressionAsType(*arguments.front(), *parameterTypes.front()) << ")\n";
+		generateSimpleFunctionCall(_functionCall, functionType->kind(), arguments, parameterTypes);
 		break;
 	}
 	case FunctionType::Kind::Log0:
